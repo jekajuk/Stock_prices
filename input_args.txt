@@ -1,0 +1,2 @@
+--n_min=15        --n_max= 60 --y_min=2000 --y_max=2020 --stat_sign=0.9 --size_step=0.04
+-f=AA_raw_data_11.csv     --n_max= 75

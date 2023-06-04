@@ -6,6 +6,36 @@ import argparse
 data = Data()
 
 
+def glob_arguments_reader_to_dictionary(file_path):
+    input_list = txt_file_reader(file_path)
+    return read_args_from_str_to_dict(input_list)
+
+
+def txt_file_reader(file_path):
+    file_in_list = []
+    with open(file_path) as f:
+        for line in f:
+            file_in_list.append(line)
+    return file_in_list
+
+
+def read_args_from_str_to_dict(input_args_from_string):
+    res = []
+    args_dict = {}
+    for i in input_args_from_string:
+        temp_list_1 = i.split(sep="=")                           # split string to list by =
+        new_string = " ".join(temp_list_1)                      # Create new temp string
+        args_list = new_string.split(sep=" ")                   # Split string to list by " "
+        for item in args_list:                                  # Clean list from " "
+            if item.strip():
+                res.append(item)
+        # args_dict = {res[i]:res[i+1] for i in range (0, len(res), 2)}
+        # print (args_dict)
+    args_dict = {res[i]:res[i+1] for i in range (0, len(res), 2)}
+        # print(args_dict)
+    return args_dict
+
+
 def positive_fraction_checker(a):
     num = float(a)
     if num < 0 or num > 1:
