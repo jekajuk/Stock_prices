@@ -1,7 +1,8 @@
-from Tools import *
-from Data import Data
-from threading import Thread, Lock
 import time
+from threading import Thread, Lock
+
+from Data import Data
+from Tools import *
 
 """     
         !!!! Input args --stat_sign and --size_step are decimal fraction, not percent !!!    
