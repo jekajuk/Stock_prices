@@ -1,8 +1,9 @@
 --n_min=15        --n_max= 60 --y_min=2011 --y_max=2020 --stat_sign=0.9 --size_step=0.04
--f=TSLA     --n_max= 45  --y_min=2000  --y_max=2010
--f=TSLA     --y_min=2014  --y_max=2018
--f=TSLA     --y_min=2018  --stat_sign=1.85
--f=TSLA     --n_min=16    --size_step=0.035 --y_min=2015 --y_max=2020
--f=INTC     --y_min=1995
--f=TSLA     --n_max= 2003
--f=TSLA     --y_min=2012  --stat_sign=0.7
+-f=InputData/TSLA.csv      --n_max= 45  --y_min=2000  --y_max=2010
+-f=InputData/INTC.csv     --y_min=2014  --y_max=2018
+-f=InputData/TSLA.csv      --y_min=2018  --stat_sign=1.85
+-f=InputData/TSLA.csv      --n_min=16    --size_step=0.035 --y_min=2015 --y_max=2020
+-f=InputData/INTC.csv     --y_min=1995
+-f=InputData/TSLA.csv      --n_max= 20
+-f=InputData/TSLA.csv     --y_min=2012  --stat_sign=0.7
+

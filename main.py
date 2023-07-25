@@ -1,33 +1,34 @@
 import time
 from threading import Thread, Lock
-
-from Data import Data
+# from Data import Data
 from Tools import *
-
+# from InputArgsReader import *
+from InputDataPreparation import *
+from InputDataReader import *
+# import sys
 """     
         !!!! Input args --stat_sign and --size_step are decimal fraction, not percent !!!    
 """
 
+input_args_file_path = [{'-f': 'input_args.txt'}]
+
 start_time = time.time()
 process_start_time = time.process_time()
 
-data = Data()
-input_args_file_path = 'input_args.txt'
-
 lock = Lock()
 thread_pool = []
+data = Data()
 
-input_args_from_file = read_input_args_from_file_to_dict(input_args_file_path)
-work_args = convert_and_check_input_args(input_args_from_file)
-reading_list = {line['-f'] for line in work_args}
-read_data_from_alphavantage(reading_list, data)
-adding_missing_information(data)
-sort_to_dict(data)
-clean_unnecessary_data(data)
-clean_partial_year_data(data)
-correct_work_args(data, work_args)
-
-for thread_num, args in enumerate(work_args):
+# -----------   Reading and converting input args     ---------------
+work_args = reading_and_preparing_input_parameters()
+# -----------   Reading input data from CSV file    ---------------
+read_input_data_from_file(work_args, data)
+# -----------   Reading input data from API     ---------------
+# read_input_data_from_api(work_args, data)
+# -----------   Input data preparation      ---------------
+new_work_args = prepare_data_and_correct_input_args(data, work_args)
+# -----------   Calculation dynamic of stock prices by threads
+for thread_num, args in enumerate(new_work_args):
     thread = Thread(target=prices_comparison_average_ss_calculation, args=(args, data, lock, thread_num))
     thread_pool.append(thread)
 
