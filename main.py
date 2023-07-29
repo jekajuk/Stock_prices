@@ -1,51 +1,47 @@
-import Tools
-from Data import Data
+import time
+from threading import Thread, Lock
+from Tools import *
+from InputDataPreparation import *
+from InputDataReader import *
 
+"""     
+        !!!! Input args --stat_sign and --size_step are decimal fraction, not percent !!!    
+"""
+
+# input_args_file_path = [{'-f': 'input_args.txt'}]
+
+start_time = time.time()
+process_start_time = time.process_time()
+
+lock = Lock()
+thread_pool = []
 data = Data()
-file_path = 'input_args.txt'
 
-# -----------------------Version 4 - run few sessions by args from txt file ------------------------------
-work_args_list = Tools.input_args_prep(file_path)
-for args in work_args_list:
-    data.result_data.append(Tools.calculate_dynamic_of_stock_prices(args))
-for item in data.result_data:
-    with open('Summary', 'a') as f:
-        f.writelines(f'{item}\n\n\n')
+# -----------   Reading and converting input args     ---------------
+work_args = reading_and_preparing_input_parameters()
+# -----------   Reading input data from CSV file    ---------------
+read_input_data_from_file(work_args, data)
+# -----------   Reading input data from API     ---------------
+# read_input_data_from_api(work_args, data)
+# -----------   Input data preparation      ---------------
+new_work_args = prepare_data_and_correct_input_args(data, work_args)
+# -----------   Calculation dynamic of stock prices by threads
+for thread_num, args in enumerate(new_work_args):
+    thread = Thread(target=prices_comparison_average_ss_calculation, args=(args, data, lock, thread_num))
+    thread_pool.append(thread)
 
-# # -----------------------Version 3 - read args from TXT file ------------------------------
-# arguments_dictionary = Tools.glob_arguments_reader_to_dictionary(file_path)
-# args = arguments_dictionary
-# print(arguments_dictionary)
-# Tools.read_csv_to_list(args['-f'], data)
-# Tools.adding_missing_information(data)
-# Tools.clean_unnecessary_data(data)
-# Tools.sort_by_year_to_dictionary(int(args['--y_min']), int(args['--y_max']), data)
-# Tools.prices_comparison_average_ss_calculation(int(args['--n_min']), int(args['--n_max']), int(args['--y_min']),
-#                                                int(args['--y_max']), data, float(args['--stat_sign']),
-#                                                float(args['--size_step']))
-# print(*data.result_data, sep="\n")
+# Start the threads
+for thread in thread_pool:
+    thread.start()
 
+# Wait for all threads to finish
+for thread in thread_pool:
+    thread.join()
 
-# -----------------------Version 2 - added reader args from cmd line ------------------------------
-#
-# args_list = Tools.cmd_args_reader()
-# Tools.read_csv_to_list(args_list[0], data)
-# Tools.adding_missing_information(data)
-# Tools.clean_unnecessary_data(data)
-# Tools.sort_by_year_to_dictionary(args_list[3], args_list[4], data)
-# Tools.prices_comparison_average_ss_calculation(args_list[1], args_list[2], args_list[3], args_list[4],
-#                                                data, args_list[5], args_list[6])
-# print(*data.result_data, sep="\n")
+end_time = time.time()
+process_end_time = time.process_time()
 
-
-# -----------------------Version 1  ------------------------------
-
-# Tools.read_csv_to_list(file_path, data)
-# Tools.adding_missing_information(data)
-# Tools.clean_unnecessary_data(data)
-# Tools.sort_by_year_to_dictionary(y_min, y_max, data)
-# Tools.prices_comparison_average_ss_calculation(N_MIN, N_MAX, y_min, y_max,
-#                                                data, stat_sign, step_of_size)
-# print(*data.result_data, sep="\n")
-
-# [file_path, N_MIN, N_MAX, y_min, y_max, stat_sign, step_of_size]
+elapsed_time = end_time - start_time
+cpu_time = process_end_time - process_start_time
+print('Execution time:', elapsed_time, 'seconds')
+print('CPU execution time:', cpu_time, 'seconds')
