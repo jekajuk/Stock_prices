@@ -1,16 +1,14 @@
 import time
 from threading import Thread, Lock
-# from Data import Data
 from Tools import *
-# from InputArgsReader import *
 from InputDataPreparation import *
 from InputDataReader import *
-# import sys
+
 """     
         !!!! Input args --stat_sign and --size_step are decimal fraction, not percent !!!    
 """
 
-input_args_file_path = [{'-f': 'input_args.txt'}]
+# input_args_file_path = [{'-f': 'input_args.txt'}]
 
 start_time = time.time()
 process_start_time = time.process_time()

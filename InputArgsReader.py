@@ -51,14 +51,14 @@ def args_from_str_to_dict(input_string):
     \nInput: <string> of args
     Output: <dict> {'-f':str, '--n_min': str, ...etc. }"""
     res = []
-    temp = input_string.replace("\n", "")                         # clean from '\n'
-    temp_list = temp.split(sep="=")                        # split string to list by '='
-    new_string = " ".join(temp_list)                      # Create new temp string
-    args_list = new_string.split(sep=" ")                   # Split string to list by " " (whitespace)
-    for item in args_list:                                  # Clean list from " " (whitespace)
+    temp = input_string.replace("\n", "")  # clean from '\n'
+    temp_list = temp.split(sep="=")  # split string to list by '='
+    new_string = " ".join(temp_list)  # Create new temp string
+    args_list = new_string.split(sep=" ")  # Split string to list by " " (whitespace)
+    for item in args_list:  # Clean list from " " (whitespace)
         if item.strip():
             res.append(item)
-    args_dict = {res[i]: res[i+1] for i in range(0, len(res), 2)}
+    args_dict = {res[i]: res[i + 1] for i in range(0, len(res), 2)}
     return args_dict
 
 
@@ -187,7 +187,7 @@ def read_input_args_from_file_to_dict(file_path):
             if not line.isspace():
                 temp_list.append(args_from_str_to_dict(line))
     for i in range(1, len(temp_list)):
-        input_args.append(temp_list[0] | temp_list[i])          # merge two lines in list to get input args
+        input_args.append(temp_list[0] | temp_list[i])  # merge two lines in list to get input args
     return input_args
 
 

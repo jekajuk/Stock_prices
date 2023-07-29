@@ -86,9 +86,9 @@ def read_data_from_api_alphavantage(reading_list, data_obj):
     for item in reading_list:
         temp_list = []
         params = {'function': 'TIME_SERIES_DAILY_ADJUSTED',
-                  'outputsize': 'full',                  # compact = 100, full - all history
+                  'outputsize': 'full',  # compact = 100, full - all history
                   'symbol': item,
-                  'apikey': 'NKXVSX4WW8L3XNXY'}              # Need to get your key
+                  'apikey': 'NKXVSX4WW8L3XNXY'}  # Need to get your key
 
         response = requests.get(base_url, params=params)
         for date in response.json()['Time Series (Daily)']:
