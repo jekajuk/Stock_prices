@@ -49,7 +49,7 @@ def prices_comparison_average_ss_calculation(input_args, data_obj, lock, thr_num
             f.writelines(f'{line}\n')
         f.writelines(f'\n\n\n\n\n')
     lock.release()
-    data.result_data.append(result_data)
+    data_obj.result_data.append(result_data)
     print(f'Thread {thr_num} finished')
     return result_data
 
