@@ -45,3 +45,5 @@ elapsed_time = end_time - start_time
 cpu_time = process_end_time - process_start_time
 print('Execution time:', elapsed_time, 'seconds')
 print('CPU execution time:', cpu_time, 'seconds')
+for res_row in data.result_data:
+    print(res_row)
