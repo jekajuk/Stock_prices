@@ -1,5 +1,6 @@
 import csv
 from datetime import datetime
+from dateutil.parser import parse
 import requests
 
 
@@ -42,6 +43,13 @@ def prepare_reading_list(work_input_args):
     return reading_list
 
 
+def append_csv_row(work_args, line, close_col_ind, csv_row, rows):
+    date_price = parse(csv_row[0]).date()
+    if date_price.year > work_args[line]['--y_max'] or date_price.year < work_args[line]['--y_min']:
+        return
+    rows.append([date_price, float(csv_row[close_col_ind])])
+
+
 def read_csv_to_list(work_args, data_obj):  # read csv to data object list
     """Function reading input data from csv file and saving to data_obj.input_data_list
     \ninput: <dict> of <dict>:
@@ -55,21 +63,24 @@ def read_csv_to_list(work_args, data_obj):  # read csv to data object list
             'TSLA': [stock prices data]
             }
     """
-    date_format = '%d/%m/%Y'
     for line in work_args:
         # print(work_args[line])
         temp_list = []
         with open(line) as data_file:
             data_list = csv.reader(data_file)
+
+            # check for close price column
+            row = next(data_list)
+            lower_row = [item.lower() for item in row]
+            close_col_ind = 1
+            if 'close' in lower_row:
+                close_col_ind = lower_row.index('close')
+            else:
+                append_csv_row(work_args, line, close_col_ind, row, temp_list)
+
             for row in data_list:
-                row[0] = datetime.strptime(row[0], date_format).date()
-                if row[0].year > work_args[line]['--y_max']:
-                    break
-                elif row[0].year < work_args[line]['--y_min']:
-                    continue
-                else:
-                    row[1] = float(row[1])
-                    temp_list.append(row)
+                append_csv_row(work_args, line, close_col_ind, row, temp_list)
+
         data_obj.input_data_list[line] = temp_list
 
 
